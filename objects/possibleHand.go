@@ -14,11 +14,11 @@ func NewPossibleHand(hand *Hand, outs []*Card) *PossibleHand {
 	return &PossibleHand{hand: hand, outs: outs}
 }
 
-func (o *PossibleHand) Print() string {
+func (ph *PossibleHand) Print() string {
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf("Hand: %s -- ", o.hand.Print()))
+	b.WriteString(fmt.Sprintf("Hand: %s -- ", ph.hand.Print()))
 	b.WriteString("[")
-	for _, card := range o.outs {
+	for _, card := range ph.outs {
 		b.WriteString(fmt.Sprintf("|%s|", card.Print()))
 	}
 	b.WriteString("]")

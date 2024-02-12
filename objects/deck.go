@@ -10,15 +10,36 @@ func GetCardIndex(value int, suit int) int {
 	return (value-2)*4 + (suit - 1)
 }
 
+// Card struct definition
+type cardRef struct {
+	card  *Card
+	avail bool
+}
+
+// NewCard is a constructor for creating a new Card instance
+func NewCardRef(card *Card, avail bool) *cardRef {
+	return &cardRef{card: card, avail: avail}
+}
+
+// GetCard returns the cardRef's card
+func (c *cardRef) GetCard() *Card {
+	return c.card
+}
+
+// GetAvail returns whether the cardRef's card is in the deck
+func (c *cardRef) GetAvail() bool {
+	return c.avail
+}
+
 // Deck struct definition
 type Deck struct {
-	cardRefs []*CardRef
+	cardRefs []*cardRef
 }
 
 // NewDeck is a constructor for creating a new Deck instance
 func NewDeck() *Deck {
 	deck := &Deck{
-		cardRefs: make([]*CardRef, 0),
+		cardRefs: make([]*cardRef, 0),
 	}
 	for value := 2; value <= 14; value++ {
 		for suit := 1; suit <= 4; suit++ {
@@ -30,12 +51,16 @@ func NewDeck() *Deck {
 	return deck
 }
 
-// Take removes and returns a card from the deck
+// Take removes a card from the deck with the value and suit provided
+// Panics if the card isn't in the deck
+// Returns the card if found
 func (d *Deck) Take(value int, suit int) *Card {
 	return d.TakeIndex(GetCardIndex(value, suit))
 }
 
-// Take removes and returns a card from the deck
+// TakeIndex removes a card from the deck with the index provided
+// Panics if the card isn't in the deck
+// Returns the card if found
 func (d *Deck) TakeIndex(cardIndex int) *Card {
 	cardRef := d.cardRefs[cardIndex]
 	if cardRef.avail {
@@ -45,12 +70,16 @@ func (d *Deck) TakeIndex(cardIndex int) *Card {
 	panic(fmt.Errorf("Card not found"))
 }
 
-// Take removes and returns a card from the deck
+// TryTake removes a card from the deck with the index provided
+// Returns nil if the card isn't in the deck
+// Returns the card if found
 func (d *Deck) TryTake(value int, suit int) *Card {
 	return d.TryTakeIndex(GetCardIndex(value, suit))
 }
 
-// Take removes and returns a card from the deck
+// TryTakeIndex removes a card from the deck with the value and suit provided
+// Returns nil if the card isn't in the deck
+// Returns the card if found
 func (d *Deck) TryTakeIndex(cardIndex int) *Card {
 	cardRef := d.cardRefs[cardIndex]
 	if cardRef.avail {
@@ -60,14 +89,16 @@ func (d *Deck) TryTakeIndex(cardIndex int) *Card {
 	return nil
 }
 
-// Returns cards to the deck
+// ReturnAll returns all provided cards to the deck
+// Panics if any of the cards are already in the deck
 func (d *Deck) ReturnAll(cards []*Card) {
 	for _, card := range cards {
 		d.Return(card)
 	}
 }
 
-// Returns a card to the deck
+// Return returns provided card to the deck
+// Panics if the card is already in the deck
 func (d *Deck) Return(card *Card) {
 	cardIndex := GetCardIndex(card.value, card.suit)
 	cardRef := d.cardRefs[cardIndex]
@@ -78,11 +109,12 @@ func (d *Deck) Return(card *Card) {
 	panic(fmt.Errorf("Card %s already in deck", card.Print()))
 }
 
-// Clone the deck
+// Clone clones the deck and and each of it's CardRefs, but not the Cards themselves
+// Returns the deck clone
 func (d *Deck) Clone() *Deck {
-	cardRefs := make([]*CardRef, 0)
-	for _, cardRef := range d.cardRefs {
-		cardRefs = append(cardRefs, &CardRef{card: cardRef.GetCard(), avail: cardRef.GetAvail()})
+	cardRefs := make([]*cardRef, 0)
+	for _, cr := range d.cardRefs {
+		cardRefs = append(cardRefs, &cardRef{card: cr.GetCard(), avail: cr.GetAvail()})
 	}
 	return &Deck{cardRefs: cardRefs}
 }

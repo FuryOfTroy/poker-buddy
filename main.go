@@ -6,25 +6,25 @@ import (
 	"furyoftroy/pokerfriend/v1/objects"
 )
 
-func PrintAllHandOdds(handsByRank map[int][]*objects.PossibleHand) {
+func printAllHandOdds(handsByRank map[int][]*objects.PossibleHand) {
 	allHandsCount := 0.0
 	for _, hands := range handsByRank {
 		allHandsCount += float64(len(hands))
 	}
 
 	fmt.Println("---Hand Odds---")
-	PrintHandOdds(objects.HIGHCARDRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.PAIRRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.TWOPAIRRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.THREEOFAKINDRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.STRAIGHTRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.FLUSHRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.FULLHOUSERANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.FOUROFAKINDRANK, handsByRank, allHandsCount)
-	PrintHandOdds(objects.STRAIGHTFLUSHRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.HIGHCARDRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.PAIRRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.TWOPAIRRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.THREEOFAKINDRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.STRAIGHTRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.FLUSHRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.FULLHOUSERANK, handsByRank, allHandsCount)
+	printHandOdds(objects.FOUROFAKINDRANK, handsByRank, allHandsCount)
+	printHandOdds(objects.STRAIGHTFLUSHRANK, handsByRank, allHandsCount)
 }
 
-func PrintHandOdds(rank int, handsByRank map[int][]*objects.PossibleHand, allHandsCount float64) {
+func printHandOdds(rank int, handsByRank map[int][]*objects.PossibleHand, allHandsCount float64) {
 	fmt.Printf("%-15s: %%%5.2f (%d)\n", objects.HANDNAMESBYRANK[rank], (float64(len(handsByRank[rank]))/allHandsCount)*100, len(handsByRank[rank]))
 }
 
@@ -46,7 +46,7 @@ func main() {
 	}
 	possibleHandsByRank := funcs.CalculateHandOdds(cards, deck)
 
-	PrintAllHandOdds(possibleHandsByRank)
+	printAllHandOdds(possibleHandsByRank)
 
 	deck.ReturnAll(cards)
 }

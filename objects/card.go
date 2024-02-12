@@ -3,7 +3,6 @@ package objects
 import (
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 // Card struct definition
@@ -65,18 +64,4 @@ func (c *Card) GetSuitChar() string {
 // Print returns the string representation of the card
 func (c *Card) Print() string {
 	return c.GetValueChar() + c.GetSuitChar()
-}
-
-func PrintCards(cards []*Card) string {
-	var b strings.Builder
-	b.WriteString("[")
-	for i, card := range cards {
-		if i != 0 {
-			b.WriteString(",")
-		}
-		b.WriteString(card.Print())
-	}
-	b.WriteString("]")
-
-	return b.String()
 }

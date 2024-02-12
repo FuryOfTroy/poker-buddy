@@ -6,37 +6,6 @@ import (
 	"sort"
 )
 
-func GetCardsByValue(cards []*objects.Card) map[int][]*objects.Card {
-	cardsByValue := make(map[int][]*objects.Card)
-	for _, card := range cards {
-		cardsByValue[card.GetValue()] = append(cardsByValue[card.GetValue()], card)
-	}
-	return cardsByValue
-}
-
-func GetCardGroupsByCount(cardsByValue map[int][]*objects.Card) map[int][][]*objects.Card {
-	cardGroupsByCount := make(map[int][][]*objects.Card)
-
-	sortedValues := GetValuesDesc(cardsByValue)
-	for _, value := range sortedValues {
-		cardGroup := cardsByValue[value]
-		cardGroupsByCount[len(cardGroup)] = append(cardGroupsByCount[len(cardGroup)], cardGroup)
-	}
-	return cardGroupsByCount
-}
-
-func GetValuesDesc(_map map[int][]*objects.Card) []int {
-	keys := make([]int, 0)
-	for key := range _map {
-		keys = append(keys, key)
-	}
-	sort.Slice(keys, func(i, j int) bool {
-		return keys[i] > keys[j]
-	})
-
-	return keys
-}
-
 func EvaluateHand(_cards []*objects.Card) *objects.Hand {
 	if len(_cards) < 5 {
 		panic(fmt.Errorf("Cannot Eval a hand with less than 5 cards"))
@@ -53,14 +22,14 @@ func EvaluateHand(_cards []*objects.Card) *objects.Hand {
 		return flushOrStraightFlush
 	}
 
-	cardsByValue := GetCardsByValue(cards)
-	cardGroupsByCount := GetCardGroupsByCount(cardsByValue)
+	cardsByValue := getCardsByValue(cards)
+	cardGroupsByCount := getCardGroupsByCount(cardsByValue)
 
 	//Check 4-of-a-kind
 	fourOfAKinds := cardGroupsByCount[4]
 	if fourOfAKinds != nil {
 		fourOfAKind := fourOfAKinds[0]
-		sortedValues := GetValuesDesc(cardsByValue)
+		sortedValues := getValuesDesc(cardsByValue)
 		if sortedValues[0] != fourOfAKind[0].GetValue() {
 			return objects.NewHand(objects.FOUROFAKINDRANK, append(fourOfAKind, cardsByValue[sortedValues[0]]...))
 		}
@@ -135,7 +104,7 @@ func getFlushOrStraightFlush(cards []*objects.Card) *objects.Hand {
 
 	flushCards := getFlush(cards)
 	if flushCards != nil {
-		straightFlushCards := getStraight(GetCardsByValue(flushCards))
+		straightFlushCards := getStraight(getCardsByValue(flushCards))
 		if straightFlushCards != nil {
 			return objects.NewHand(objects.STRAIGHTFLUSHRANK, straightFlushCards)
 		}
@@ -174,7 +143,7 @@ func getStraight(cardsByValue map[int][]*objects.Card) []*objects.Card {
 	lowCard := 99
 	highCard := 99
 
-	sortedValues := GetValuesDesc(cardsByValue)
+	sortedValues := getValuesDesc(cardsByValue)
 	if sortedValues[0] == 14 {
 		sortedValues = append(sortedValues, 1)
 	}
@@ -201,4 +170,35 @@ func getStraight(cardsByValue map[int][]*objects.Card) []*objects.Card {
 	}
 
 	return nil
+}
+
+func getCardsByValue(cards []*objects.Card) map[int][]*objects.Card {
+	cardsByValue := make(map[int][]*objects.Card)
+	for _, card := range cards {
+		cardsByValue[card.GetValue()] = append(cardsByValue[card.GetValue()], card)
+	}
+	return cardsByValue
+}
+
+func getCardGroupsByCount(cardsByValue map[int][]*objects.Card) map[int][][]*objects.Card {
+	cardGroupsByCount := make(map[int][][]*objects.Card)
+
+	sortedValues := getValuesDesc(cardsByValue)
+	for _, value := range sortedValues {
+		cardGroup := cardsByValue[value]
+		cardGroupsByCount[len(cardGroup)] = append(cardGroupsByCount[len(cardGroup)], cardGroup)
+	}
+	return cardGroupsByCount
+}
+
+func getValuesDesc(_map map[int][]*objects.Card) []int {
+	keys := make([]int, 0)
+	for key := range _map {
+		keys = append(keys, key)
+	}
+	sort.Slice(keys, func(i, j int) bool {
+		return keys[i] > keys[j]
+	})
+
+	return keys
 }
