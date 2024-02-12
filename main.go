@@ -6,26 +6,48 @@ import (
 	"furyoftroy/pokerfriend/v1/objects"
 )
 
-func printAllHandOdds(handsByRank map[int][]*objects.PossibleHand) {
+func printAllHandStats(handsByRank map[int][]*objects.PossibleHand) {
 	allHandsCount := 0.0
 	for _, hands := range handsByRank {
 		allHandsCount += float64(len(hands))
 	}
 
 	fmt.Println("---Hand Odds---")
-	printHandOdds(objects.HIGHCARDRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.PAIRRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.TWOPAIRRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.THREEOFAKINDRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.STRAIGHTRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.FLUSHRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.FULLHOUSERANK, handsByRank, allHandsCount)
-	printHandOdds(objects.FOUROFAKINDRANK, handsByRank, allHandsCount)
-	printHandOdds(objects.STRAIGHTFLUSHRANK, handsByRank, allHandsCount)
+	printHandStats(objects.HIGHCARDRANK, handsByRank, allHandsCount)
+	printHandStats(objects.PAIRRANK, handsByRank, allHandsCount)
+	printHandStats(objects.TWOPAIRRANK, handsByRank, allHandsCount)
+	printHandStats(objects.THREEOFAKINDRANK, handsByRank, allHandsCount)
+	printHandStats(objects.STRAIGHTRANK, handsByRank, allHandsCount)
+	printHandStats(objects.FLUSHRANK, handsByRank, allHandsCount)
+	printHandStats(objects.FULLHOUSERANK, handsByRank, allHandsCount)
+	printHandStats(objects.FOUROFAKINDRANK, handsByRank, allHandsCount)
+	printHandStats(objects.STRAIGHTFLUSHRANK, handsByRank, allHandsCount)
+}
+
+func printHandStats(rank int, handsByRank map[int][]*objects.PossibleHand, allHandsCount float64) {
+	printHandOdds(rank, handsByRank, allHandsCount)
+	printHandsAndOuts(handsByRank[rank])
+}
+
+func printHandsAndOuts(possibleHands []*objects.PossibleHand) {
+	fmt.Print("\tPossible hands:\n")
+	if len(possibleHands) < 10 {
+		for _, ph := range possibleHands {
+			fmt.Printf("\t%s\n", ph.Print())
+		}
+	} else {
+		for i := 0; i < 5; i++ {
+			fmt.Printf("\t%s\n", possibleHands[i].Print())
+		}
+		fmt.Println("...")
+		for i := len(possibleHands) - 6; i < len(possibleHands)-1; i++ {
+			fmt.Printf("\t%s\n", possibleHands[i].Print())
+		}
+	}
 }
 
 func printHandOdds(rank int, handsByRank map[int][]*objects.PossibleHand, allHandsCount float64) {
-	fmt.Printf("%-15s: %%%5.2f (%d)\n", objects.HANDNAMESBYRANK[rank], (float64(len(handsByRank[rank]))/allHandsCount)*100, len(handsByRank[rank]))
+	fmt.Printf("%-15s: %5.2f%% (%d)\n", objects.HANDNAMESBYRANK[rank], (float64(len(handsByRank[rank]))/allHandsCount)*100, len(handsByRank[rank]))
 }
 
 func main() {
@@ -34,9 +56,9 @@ func main() {
 	cards = append(cards,
 		deck.Take(13, 1),
 		deck.Take(10, 1),
+		deck.Take(7, 2),
 		deck.Take(9, 2),
-		deck.Take(4, 2),
-		deck.Take(13, 2))
+		deck.Take(5, 2))
 
 	if len(cards) >= 5 {
 		currentHand := funcs.EvaluateHand(cards)
@@ -46,7 +68,7 @@ func main() {
 	}
 	possibleHandsByRank := funcs.CalculateHandOdds(cards, deck)
 
-	printAllHandOdds(possibleHandsByRank)
+	printAllHandStats(possibleHandsByRank)
 
 	deck.ReturnAll(cards)
 }

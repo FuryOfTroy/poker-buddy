@@ -5,7 +5,12 @@ import (
 	"strings"
 )
 
-// GetCardIndex returns the index of the card in the deck
+// GetCardIndex returns the deck index of the card with the provided value and suit
+func GetIndex(card *Card) int {
+	return GetCardIndex(card.GetValue(), card.GetSuit())
+}
+
+// GetCardIndex returns the deck index of the card with the provided value and suit
 func GetCardIndex(value int, suit int) int {
 	return (value-2)*4 + (suit - 1)
 }

@@ -8,10 +8,14 @@ import (
 
 func CalculateHandOdds(cards []*objects.Card, deck *objects.Deck) map[int][]*objects.PossibleHand {
 	results := make(map[int][]*objects.PossibleHand)
+	if len(cards) == 7 {
+		return results
+	}
+
 	resultChan := make(chan map[int][]*objects.PossibleHand)
 
 	resultCount := 0
-	for i := 0; i < 52; i++ {
+	for i := 51; i >= 0; i-- {
 		if enumerateRemainingCardsInGoroutine(i, cards, deck, resultChan) {
 			resultCount++
 		}
@@ -21,7 +25,7 @@ func CalculateHandOdds(cards []*objects.Card, deck *objects.Deck) map[int][]*obj
 	for i := len(cards); i < 7; i++ {
 		totalHands = totalHands * (52 - i)
 	}
-	fmt.Printf("\nCalculating about %d hands...\n\n", totalHands)
+	fmt.Printf("\nAnalyzing about %d possible hands...\n\n", totalHands)
 
 	for i := 0; i < resultCount; i++ {
 		chanResults := <-resultChan
@@ -73,7 +77,8 @@ func enumerateRemainingCards(cards []*objects.Card, deck *objects.Deck, outCount
 		panic(fmt.Errorf("Uh oh, should have returned or panicked"))
 	}
 
-	for i := 0; i < 52; i++ {
+	lastCard := cards[len(cards)-1]
+	for i := objects.GetIndex(lastCard); i >= 0; i-- {
 		card := deck.TryTakeIndex(i)
 		if card == nil {
 			continue
@@ -89,9 +94,7 @@ func reportNoHandCalculated(cards []*objects.Card) {
 	var b strings.Builder
 	b.WriteString("No hand produced! Cards: ")
 	for _, card := range cards {
-		b.WriteString("|")
-		b.WriteString(card.Print())
-		b.WriteString("|")
+		b.WriteString(fmt.Sprintf("|%5s|", card.Print()))
 	}
 	panic(fmt.Errorf(b.String()))
 }
