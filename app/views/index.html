@@ -1,0 +1,70 @@
+{% extends "./layouts/main.html" %}
+
+{% block style %}<link rel="stylesheet" href="static/index.css">{% endblock %}
+{% block js %}<script src="static/index.js"></script>{% endblock %}
+{% block content %}
+<h1>Poker Buddy</h1>
+<p>Select all cards within your hand as well as all community cards</p>
+<br>
+<img name="A♥️" src="static/ace_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="K♥️"src="static/king_of_hearts2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="Q♥️"src="static/queen_of_hearts2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="J♥️"src="static/jack_of_hearts2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="10♥️"src="static/10_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="9♥️"src="static/9_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="8♥️"src="static/8_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="7♥️"src="static/7_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="6♥️"src="static/6_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="5♥️"src="static/5_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="4♥️"src="static/4_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="3♥️"src="static/3_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="2♥️"src="static/2_of_hearts.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<br>
+<img name="A♦️" src="static/ace_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="K♦️"src="static/king_of_diamonds2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="Q♦️"src="static/queen_of_diamonds2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="J♦️"src="static/jack_of_diamonds2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="10♦️"src="static/10_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="9♦️"src="static/9_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="8♦️"src="static/8_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="7♦️"src="static/7_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="6♦️"src="static/6_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="5♦️"src="static/5_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="4♦️"src="static/4_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="3♦️"src="static/3_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="2♦️"src="static/2_of_diamonds.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<br>
+<img name="A♣️"src="static/ace_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="K♣️"src="static/king_of_clubs2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="Q♣️"src="static/queen_of_clubs2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="J♣️"src="static/jack_of_clubs2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="10♣️"src="static/10_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="9♣️"src="static/9_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="8♣️"src="static/8_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="7♣️"src="static/7_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="6♣️"src="static/6_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="5♣️"src="static/5_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="4♣️"src="static/4_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="3♣️"src="static/3_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="2♣️"src="static/2_of_clubs.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<br>
+<img name="A♠️"src="static/ace_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="K♠️"src="static/king_of_spades2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="Q♠️"src="static/queen_of_spades2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="J♠️"src="static/jack_of_spades2.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="10♠️"src="static/10_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="9♠️"src="static/9_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="8♠️"src="static/8_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="7♠️"src="static/7_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="6♠️"src="static/6_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="5♠️"src="static/5_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="4♠️"src="static/4_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="3♠️"src="static/3_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<img name="2♠️"src="static/2_of_spades.svg" type="image/svg+xml" width="69" height="100" onclick="card_onclick(this)">
+<br>
+<button type="button" onclick="evaluatehand_onclick()">Evaluate Hand</button>
+<br>
+<button type="button" onclick="calculateodds_onclick()">Calculate Odds</button>
+
+<div id="result" name="result"></div>
+{% endblock %} 

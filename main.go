@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
-	"furyoftroy/pokerfriend/v1/funcs"
-	"furyoftroy/pokerfriend/v1/objects"
+	"furyoftroy/pokerbuddy/v1/app"
+	"furyoftroy/pokerbuddy/v1/funcs"
+	"furyoftroy/pokerbuddy/v1/objects"
+	"log"
+	"os"
 )
 
 func printAllHandStats(handsByRank map[int][]*objects.PossibleHand) {
@@ -51,6 +54,20 @@ func printHandOdds(rank int, handsByRank map[int][]*objects.PossibleHand, allHan
 }
 
 func main() {
+	host, found := os.LookupEnv("PB_HOST")
+	if !found {
+		host = "localhost"
+	}
+	port, found := os.LookupEnv("PB_PORT")
+	if !found {
+		port = "41100"
+	}
+
+	app := app.NewApplication()
+	log.Fatal(app.Listen(fmt.Sprintf("%s:%s", host, port)))
+}
+
+func mainTest() {
 	deck := objects.NewDeck()
 	cards := make([]*objects.Card, 0)
 	cards = append(cards,
@@ -60,13 +77,14 @@ func main() {
 		deck.Take(9, 2),
 		deck.Take(5, 2))
 
+	var currentHand *objects.Hand
 	if len(cards) >= 5 {
-		currentHand := funcs.EvaluateHand(cards)
+		currentHand = funcs.EvaluateHand(cards)
 		fmt.Printf("Current Hand: %s\n", currentHand.Print())
 	} else {
 		fmt.Print("Not enough cards for current hand calculation\n")
 	}
-	possibleHandsByRank := funcs.CalculateHandOdds(cards, deck)
+	possibleHandsByRank := funcs.CalculateHandOdds(currentHand, cards, deck)
 
 	printAllHandStats(possibleHandsByRank)
 
