@@ -15,6 +15,14 @@ func GetCardIndex(value int, suit int) int {
 	return (value-2)*4 + (suit - 1)
 }
 
+// GetCardIndex returns the deck index of the card with the provided value and suit
+func GetCardIndexFromName(cardName string) int {
+	cardNameRunes := []rune(cardName)
+	suitStr := string(cardNameRunes[len(cardNameRunes)-2:])
+	valueStr := string(cardNameRunes[:len(cardNameRunes)-2])
+	return GetCardIndex(StringToValue(valueStr), StringToSuit(suitStr))
+}
+
 // Card struct definition
 type cardRef struct {
 	card  *Card
@@ -73,6 +81,13 @@ func (d *Deck) TakeIndex(cardIndex int) *Card {
 		return cardRef.card
 	}
 	panic(fmt.Errorf("Card not found"))
+}
+
+// TakeName removes a card from the deck with the name provided
+// Panics if the card isn't in the deck
+// Returns the card if found
+func (d *Deck) TakeName(cardName string) *Card {
+	return d.TakeIndex(GetCardIndexFromName(cardName))
 }
 
 // TryTake removes a card from the deck with the index provided

@@ -30,9 +30,20 @@ func (c *Card) GetSuit() int {
 	return c.suit
 }
 
-// GetValueChar returns the character representation of the card's value
-func (c *Card) GetValueChar() string {
-	switch c.value {
+func (c *Card) GetValueString() string {
+	return ValueToString(c.value)
+}
+
+func (c *Card) GetSuitString() string {
+	return SuitToString(c.suit)
+}
+
+// ValueToString returns the string representation of a card's value
+func ValueToString(value int) string {
+	if value < 0 || value > 14 {
+		panic(fmt.Errorf("Invalid value %d", value))
+	}
+	switch value {
 	case 14:
 		return "A"
 	case 13:
@@ -42,13 +53,38 @@ func (c *Card) GetValueChar() string {
 	case 11:
 		return "J"
 	default:
-		return strconv.Itoa(c.value)
+		return strconv.Itoa(value)
 	}
 }
 
-// GetSuitChar returns the character representation of the card's suit
-func (c *Card) GetSuitChar() string {
-	switch c.suit {
+// StrToValue returns a card's value from the string representation provided
+func StringToValue(valueStr string) int {
+	switch valueStr {
+	case "A":
+		return 14
+	case "K":
+		return 13
+	case "Q":
+		return 12
+	case "J":
+		return 11
+	}
+
+	value, err := strconv.Atoi(valueStr)
+	if err != nil {
+		panic(err)
+	}
+
+	if value < 0 || value > 14 {
+		panic(fmt.Errorf("Invalid value string %s", valueStr))
+	}
+
+	return value
+}
+
+// SuitToString returns the string representation of a card's suit
+func SuitToString(suit int) string {
+	switch suit {
 	case 1:
 		return "♥️"
 	case 2:
@@ -58,10 +94,25 @@ func (c *Card) GetSuitChar() string {
 	case 4:
 		return "♠️"
 	}
-	return ""
+	panic(fmt.Errorf("Invalid suit %d", suit))
+}
+
+// StringToSuit returns a card's suit from the string representation provided
+func StringToSuit(suitStr string) int {
+	switch suitStr {
+	case "♥️":
+		return 1
+	case "♦️":
+		return 2
+	case "♣️":
+		return 3
+	case "♠️":
+		return 4
+	}
+	panic(fmt.Errorf("Invalid suit string %s", suitStr))
 }
 
 // Print returns the string representation of the card
 func (c *Card) Print() string {
-	return c.GetValueChar() + c.GetSuitChar()
+	return ValueToString(c.value) + SuitToString(c.suit)
 }

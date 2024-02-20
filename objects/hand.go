@@ -93,28 +93,28 @@ func (h *Hand) GetFullName() string {
 	valueDesc := "N/A"
 	switch h.rank {
 	case 0:
-		valueDesc = h.cards[0].GetValueChar()
+		valueDesc = h.cards[0].GetValueString()
 		break
 	case 1:
-		valueDesc = h.cards[0].GetValueChar()
+		valueDesc = h.cards[0].GetValueString()
 		break
 	case 2:
-		valueDesc = fmt.Sprintf("%s/%s", h.cards[0].GetValueChar(), h.cards[2].GetValueChar())
+		valueDesc = fmt.Sprintf("%s/%s", h.cards[0].GetValueString(), h.cards[2].GetValueString())
 		break
 	case 3:
-		valueDesc = h.cards[0].GetValueChar()
+		valueDesc = h.cards[0].GetValueString()
 		break
 	case 4:
-		valueDesc = h.cards[0].GetValueChar()
+		valueDesc = h.cards[0].GetValueString()
 		break
 	case 5:
 		valueDesc = h.cards[0].Print()
 		break
 	case 6:
-		valueDesc = fmt.Sprintf("%s/%s", h.cards[0].GetValueChar(), h.cards[2].GetValueChar())
+		valueDesc = fmt.Sprintf("%s/%s", h.cards[0].GetValueString(), h.cards[2].GetValueString())
 		break
 	case 7:
-		valueDesc = h.cards[0].GetValueChar()
+		valueDesc = h.cards[0].GetValueString()
 		break
 	case 8:
 		valueDesc = h.cards[0].Print()
@@ -131,9 +131,9 @@ func (h *Hand) GetCards() []*Card {
 func (h *Hand) Print() string {
 	var b strings.Builder
 	for _, card := range h.cards {
-		b.WriteString(fmt.Sprintf("%5s", card.Print()))
+		b.WriteString(fmt.Sprintf("%-4s", card.Print()))
 	}
-	b.WriteString(fmt.Sprintf(" (%s)", h.GetFullName()))
+	b.WriteString(fmt.Sprintf("(%s)", h.GetFullName()))
 
 	return b.String()
 }

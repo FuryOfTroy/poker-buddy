@@ -1,9 +1,19 @@
 package funcs
 
 import (
-	"furyoftroy/pokerfriend/v1/objects"
+	"furyoftroy/pokerbuddy/v1/objects"
 	"testing"
 )
+
+func TestEvaluateHandNoCards(t *testing.T) {
+	defer func() {
+		if err := recover(); err == nil {
+			t.Fatalf("Expected error when evaluating empty hand")
+		}
+	}()
+
+	EvaluateHand(make([]*objects.Card, 0))
+}
 
 func TestEvaluateHandStraightFlush(t *testing.T) {
 	deck := objects.NewDeck()

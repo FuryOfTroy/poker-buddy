@@ -2,7 +2,7 @@ package funcs
 
 import (
 	"fmt"
-	"furyoftroy/pokerfriend/v1/objects"
+	"furyoftroy/pokerbuddy/v1/objects"
 	"sort"
 )
 

@@ -2,11 +2,11 @@ package funcs
 
 import (
 	"fmt"
-	"furyoftroy/pokerfriend/v1/objects"
+	"furyoftroy/pokerbuddy/v1/objects"
 	"strings"
 )
 
-func CalculateHandOdds(cards []*objects.Card, deck *objects.Deck) map[int][]*objects.PossibleHand {
+func CalculateHandOdds(originalHand *objects.Hand, cards []*objects.Card, deck *objects.Deck) map[int][]*objects.PossibleHand {
 	results := make(map[int][]*objects.PossibleHand)
 	if len(cards) == 7 {
 		return results
@@ -16,7 +16,7 @@ func CalculateHandOdds(cards []*objects.Card, deck *objects.Deck) map[int][]*obj
 
 	resultCount := 0
 	for i := 51; i >= 0; i-- {
-		if enumerateRemainingCardsInGoroutine(i, cards, deck, resultChan) {
+		if enumerateRemainingCardsInGoroutine(i, originalHand, cards, deck, resultChan) {
 			resultCount++
 		}
 	}
@@ -41,52 +41,60 @@ func mergeHandMaps(m1 map[int][]*objects.PossibleHand, m2 map[int][]*objects.Pos
 	}
 }
 
-func enumerateRemainingCardsInGoroutine(i int, _cards []*objects.Card, _deck *objects.Deck, resultChan chan map[int][]*objects.PossibleHand) bool {
+func enumerateRemainingCardsInGoroutine(i int, originalHand *objects.Hand, _cards []*objects.Card, _deck *objects.Deck, resultChan chan map[int][]*objects.PossibleHand) bool {
 	deck := _deck.Clone()
 	card := deck.TryTakeIndex(i)
 	if card != nil {
 		cards := make([]*objects.Card, len(_cards))
 		copy(cards, _cards)
-		go internalEnumerateRemainingCardsInGoroutine(append(cards, card), deck, 1, resultChan)
+		go internalEnumerateRemainingCardsInGoroutine(originalHand, append(cards, card), deck, 1, resultChan)
 		return true
 	}
 	return false
 }
 
-func internalEnumerateRemainingCardsInGoroutine(cards []*objects.Card, deck *objects.Deck, outCount int, resultChan chan map[int][]*objects.PossibleHand) {
+func internalEnumerateRemainingCardsInGoroutine(originalHand *objects.Hand, cards []*objects.Card, deck *objects.Deck, outCount int, resultChan chan map[int][]*objects.PossibleHand) {
 	handsByRank := make(map[int][]*objects.PossibleHand)
 	defer func() {
 		resultChan <- handsByRank
 	}()
-	enumerateRemainingCards(cards, deck, outCount, handsByRank)
+	enumerateRemainingCards(originalHand, cards, deck, outCount, handsByRank)
 }
 
-func enumerateRemainingCards(cards []*objects.Card, deck *objects.Deck, outCount int, handsByRank map[int][]*objects.PossibleHand) {
-	if len(cards) == 7 {
+func enumerateRemainingCards(originalHand *objects.Hand, cards []*objects.Card, deck *objects.Deck, outCount int, handsByRank map[int][]*objects.PossibleHand) {
+	handToBeat := originalHand
+	if len(cards) >= 5 {
 		hand := EvaluateHand(cards)
 		if hand == nil {
 			reportNoHandCalculated(cards)
 		} else {
-			outs := make([]*objects.Card, 0)
-			for i := len(cards) - outCount; i < len(cards); i++ {
-				outs = append(outs, cards[i])
+			if objects.CompareHands(hand, originalHand) > 0 {
+				handToBeat = hand
+				outs := make([]*objects.Card, 0)
+				for i := len(cards) - outCount; i < len(cards); i++ {
+					for _, cardInHand := range hand.GetCards() {
+						if cards[i] == cardInHand {
+							outs = append(outs, cards[i])
+						}
+					}
+				}
+				handsByRank[hand.GetRank()] = append(handsByRank[hand.GetRank()], objects.NewPossibleHand(hand, outs))
 			}
-			handsByRank[hand.GetRank()] = append(handsByRank[hand.GetRank()], objects.NewPossibleHand(hand, outs))
-			return
 		}
-		panic(fmt.Errorf("Uh oh, should have returned or panicked"))
 	}
 
-	lastCard := cards[len(cards)-1]
-	for i := objects.GetIndex(lastCard); i >= 0; i-- {
-		card := deck.TryTakeIndex(i)
-		if card == nil {
-			continue
+	if len(cards) < 7 {
+		lastCard := cards[len(cards)-1]
+		for i := objects.GetIndex(lastCard); i >= 0; i-- {
+			card := deck.TryTakeIndex(i)
+			if card == nil {
+				continue
+			}
+			func() {
+				defer deck.Return(card)
+				enumerateRemainingCards(handToBeat, append(cards, card), deck, outCount+1, handsByRank)
+			}()
 		}
-		func() {
-			defer deck.Return(card)
-			enumerateRemainingCards(append(cards, card), deck, outCount+1, handsByRank)
-		}()
 	}
 }
 
@@ -94,7 +102,7 @@ func reportNoHandCalculated(cards []*objects.Card) {
 	var b strings.Builder
 	b.WriteString("No hand produced! Cards: ")
 	for _, card := range cards {
-		b.WriteString(fmt.Sprintf("|%5s|", card.Print()))
+		b.WriteString(fmt.Sprintf("|%-4s|", card.Print()))
 	}
 	panic(fmt.Errorf(b.String()))
 }
