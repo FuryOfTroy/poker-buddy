@@ -7,6 +7,8 @@ import (
 	"furyoftroy/pokerbuddy/v1/objects"
 	"log"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 func printAllHandStats(handsByRank map[int][]*objects.PossibleHand) {
@@ -33,19 +35,8 @@ func printHandStats(rank int, handsByRank map[int][]*objects.PossibleHand, allHa
 }
 
 func printHandsAndOuts(possibleHands []*objects.PossibleHand) {
-	fmt.Print("\tPossible hands:\n")
-	if len(possibleHands) < 10 {
-		for _, ph := range possibleHands {
-			fmt.Printf("\t%s\n", ph.Print())
-		}
-	} else {
-		for i := 0; i < 5; i++ {
-			fmt.Printf("\t%s\n", possibleHands[i].Print())
-		}
-		fmt.Println("...")
-		for i := len(possibleHands) - 6; i < len(possibleHands)-1; i++ {
-			fmt.Printf("\t%s\n", possibleHands[i].Print())
-		}
+	if len(possibleHands) > 0 {
+		fmt.Printf("\t%s\n", possibleHands[0])
 	}
 }
 
@@ -54,33 +45,65 @@ func printHandOdds(rank int, handsByRank map[int][]*objects.PossibleHand, allHan
 }
 
 func main() {
-	host, found := os.LookupEnv("PB_HOST")
-	if !found {
-		host = "localhost"
-	}
-	port, found := os.LookupEnv("PB_PORT")
-	if !found {
-		port = "41100"
+	var rootCmd = &cobra.Command{
+		Use:   "pokerbuddy",
+		Short: "pokerbuddy - a CLI that helps you play poker",
+		Long: `pokerbuddy is a CLI that takes information about the state of your poker game, and provides useful statistics that can guide your next decision
+	   
+	You might not be allowed to use this in online play, so use with caution!`,
+		Run: func(cmd *cobra.Command, args []string) {
+
+		},
 	}
 
-	app := app.NewApplication()
-	log.Fatal(app.Listen(fmt.Sprintf("%s:%s", host, port)))
+	var webCmd = &cobra.Command{
+		Use:   "web",
+		Short: "Launch the pokerbuddy web app",
+		Long:  "Launch the pokerbuddy web app so you can use a GUI instead of the CLI",
+		Run: func(cmd *cobra.Command, args []string) {
+			host, found := os.LookupEnv("PB_HOST")
+			if !found {
+				host = "localhost"
+			}
+			port, found := os.LookupEnv("PB_PORT")
+			if !found {
+				port = "41100"
+			}
+
+			app := app.NewApplication()
+			log.Fatal(app.Listen(fmt.Sprintf("%s:%s", host, port)))
+		},
+	}
+
+	var evalCmd = &cobra.Command{
+		Use:   "eval",
+		Short: "Evaluate your current hand",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			eval(args[0])
+		},
+	}
+
+	rootCmd.AddCommand(webCmd)
+	rootCmd.AddCommand(evalCmd)
+
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Printf("Whoops. There was an error while executing your CLI '%s'", err)
+		os.Exit(1)
+	}
 }
 
-func mainTest() {
+func eval(cardsStr string) {
 	deck := objects.NewDeck()
 	cards := make([]*objects.Card, 0)
-	cards = append(cards,
-		deck.Take(13, 1),
-		deck.Take(10, 1),
-		deck.Take(7, 2),
-		deck.Take(9, 2),
-		deck.Take(5, 2))
+	for i := 0; i < len(cardsStr); i += 2 {
+		cards = append(cards, deck.TakeName(cardsStr[i:i+2]))
+	}
 
 	var currentHand *objects.Hand
 	if len(cards) >= 5 {
 		currentHand = funcs.EvaluateHand(cards)
-		fmt.Printf("Current Hand: %s\n", currentHand.Print())
+		fmt.Printf("Current Hand: %s\n", currentHand)
 	} else {
 		fmt.Print("Not enough cards for current hand calculation\n")
 	}
