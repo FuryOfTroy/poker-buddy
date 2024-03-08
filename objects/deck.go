@@ -17,10 +17,7 @@ func GetCardIndex(value int, suit int) int {
 
 // GetCardIndex returns the deck index of the card with the provided value and suit
 func GetCardIndexFromName(cardName string) int {
-	cardNameRunes := []rune(cardName)
-	suitStr := string(cardNameRunes[len(cardNameRunes)-2:])
-	valueStr := string(cardNameRunes[:len(cardNameRunes)-2])
-	return GetCardIndex(StringToValue(valueStr), StringToSuit(suitStr))
+	return GetCardIndex(StringToValue(cardName[0:1]), StringToSuit(cardName[1:2]))
 }
 
 // Card struct definition
@@ -122,11 +119,11 @@ func (d *Deck) ReturnAll(cards []*Card) {
 func (d *Deck) Return(card *Card) {
 	cardIndex := GetCardIndex(card.value, card.suit)
 	cardRef := d.cardRefs[cardIndex]
-	if cardRef.avail == false {
+	if !cardRef.avail {
 		cardRef.avail = true
 		return
 	}
-	panic(fmt.Errorf("Card %s already in deck", card.Print()))
+	panic(fmt.Errorf("Card %s already in deck", card))
 }
 
 // Clone clones the deck and and each of it's CardRefs, but not the Cards themselves
@@ -140,11 +137,11 @@ func (d *Deck) Clone() *Deck {
 }
 
 // Print prints all cards in the deck
-func (d *Deck) Print() string {
+func (d *Deck) String() string {
 	var b strings.Builder
 	for _, cardRef := range d.cardRefs {
 		if cardRef.avail {
-			b.WriteString(cardRef.card.Print())
+			b.WriteString(cardRef.card.String())
 			b.WriteString("\n")
 		}
 	}

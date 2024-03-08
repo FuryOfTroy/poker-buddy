@@ -11,5 +11,5 @@ func PossibleHandToSer(possibleHand *objects.PossibleHand) fiber.Map {
 	for _, out := range possibleHand.GetOuts() {
 		outs = append(outs, CardToSer(out))
 	}
-	return fiber.Map{"hand": HandToSer(possibleHand.GetHand()), "outs": outs, "print": possibleHand.Print()}
+	return fiber.Map{"hand": HandToSer(possibleHand.GetHand()), "outs": outs, "print": possibleHand.String()}
 }

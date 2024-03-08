@@ -22,14 +22,14 @@ func (ph *PossibleHand) GetOuts() []*Card {
 	return ph.outs
 }
 
-func (ph *PossibleHand) Print() string {
+func (ph *PossibleHand) String() string {
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf("Hand: %s -- ", ph.hand.Print()))
+	b.WriteString(fmt.Sprintf("Hand: %s -- ", ph.hand))
 	b.WriteString("[")
 	for _, card := range ph.outs {
-		b.WriteString(fmt.Sprintf("%-4s", card.Print()))
+		b.WriteString(card.String())
 	}
-	b.WriteString(" ]")
+	b.WriteString("]")
 
 	return b.String()
 }

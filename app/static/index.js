@@ -22,7 +22,7 @@ function evaluatehand_onclick() {
 
 function calculateodds_onclick() {
     let cards = document.getElementsByClassName("selected")
-    let cardNames = Array.from(cards).map((card) => card.name)
+    let cardNames = Array.from(cards).map((card) => card.name).join("")
     let body = JSON.stringify(cardNames)
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {

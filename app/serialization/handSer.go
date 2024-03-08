@@ -11,5 +11,5 @@ func HandToSer(hand *objects.Hand) fiber.Map {
 	for _, card := range hand.GetCards() {
 		cards = append(cards, CardToSer(card))
 	}
-	return fiber.Map{"rank": hand.GetRank(), "cards": cards, "print": hand.Print()}
+	return fiber.Map{"rank": hand.GetRank(), "cards": cards, "print": hand.String()}
 }

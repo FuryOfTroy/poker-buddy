@@ -17,14 +17,14 @@ func RenderIndex(c *fiber.Ctx) error {
 func EvaluateCards(c *fiber.Ctx) error {
 	deck := objects.NewDeck()
 	requestBody := c.Context().Request.Body()
-	var cardNames []string
+	var cardNames string
 	err := json.Unmarshal(requestBody, &cardNames)
 	if err != nil {
 		panic(err)
 	}
 	cards := make([]*objects.Card, 0)
-	for _, cardName := range cardNames {
-		cards = append(cards, deck.TakeName(cardName))
+	for i := 0; i < len(cardNames); i += 2 {
+		cards = append(cards, deck.TakeName(cardNames[i:2]))
 	}
 	hand := funcs.EvaluateHand(cards)
 	return c.Status(fiber.StatusOK).JSON(serialization.HandToSer(hand))
@@ -33,14 +33,14 @@ func EvaluateCards(c *fiber.Ctx) error {
 func CalculateOdds(c *fiber.Ctx) error {
 	deck := objects.NewDeck()
 	requestBody := c.Context().Request.Body()
-	var cardNames []string
+	var cardNames string
 	err := json.Unmarshal(requestBody, &cardNames)
 	if err != nil {
 		panic(err)
 	}
 	cards := make([]*objects.Card, 0)
-	for _, cardName := range cardNames {
-		cards = append(cards, deck.TakeName(cardName))
+	for i := 0; i < len(cardNames); i += 2 {
+		cards = append(cards, deck.TakeName(cardNames[i:2]))
 	}
 	hand := funcs.EvaluateHand(cards)
 	possibleHandsByRank := funcs.CalculateHandOdds(hand, cards, deck)

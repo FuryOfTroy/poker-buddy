@@ -102,7 +102,7 @@ func reportNoHandCalculated(cards []*objects.Card) {
 	var b strings.Builder
 	b.WriteString("No hand produced! Cards: ")
 	for _, card := range cards {
-		b.WriteString(fmt.Sprintf("|%-4s|", card.Print()))
+		b.WriteString(fmt.Sprintf("|%-4s|", card))
 	}
 	panic(fmt.Errorf(b.String()))
 }

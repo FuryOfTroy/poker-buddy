@@ -7,5 +7,5 @@ import (
 )
 
 func CardToSer(card *objects.Card) fiber.Map {
-	return fiber.Map{"value": card.GetValue(), "suit": card.GetSuit(), "print": card.Print()}
+	return fiber.Map{"value": card.GetValue(), "suit": card.GetSuit(), "print": card.String()}
 }

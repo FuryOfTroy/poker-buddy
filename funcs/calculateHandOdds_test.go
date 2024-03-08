@@ -151,5 +151,5 @@ func TestCalculateHandOddsHighCard(t *testing.T) {
 
 func checkOdds(actualPossibleHandsByRank map[int][]*objects.PossibleHand, expectedPossibleHandsByRank map[int][]*objects.PossibleHand, t *testing.T) {
 	// TODO: Actually check odds
-	// t.Fatalf("Expected %s, got %s", expectedHand.Print(), actualHand.Print())
+	// t.Fatalf("Expected %s, got %s", expectedHand, actualHand)
 }

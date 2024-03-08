@@ -263,6 +263,6 @@ func TestEvaluateHandStraightRandomOrder(t *testing.T) {
 func checkHand(cards []*objects.Card, expectedHand *objects.Hand, t *testing.T) {
 	actualHand := EvaluateHand(cards)
 	if objects.CompareHands(expectedHand, actualHand) != 0 {
-		t.Fatalf("Expected %s, got %s", expectedHand.Print(), actualHand.Print())
+		t.Fatalf("Expected %s, got %s", expectedHand, actualHand)
 	}
 }

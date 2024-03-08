@@ -41,7 +41,7 @@ func (c *Card) GetSuitString() string {
 // ValueToString returns the string representation of a card's value
 func ValueToString(value int) string {
 	if value < 0 || value > 14 {
-		panic(fmt.Errorf("Invalid value %d", value))
+		panic(fmt.Errorf("invalid value %d", value))
 	}
 	switch value {
 	case 14:
@@ -52,6 +52,8 @@ func ValueToString(value int) string {
 		return "Q"
 	case 11:
 		return "J"
+	case 10:
+		return "T"
 	default:
 		return strconv.Itoa(value)
 	}
@@ -60,14 +62,16 @@ func ValueToString(value int) string {
 // StrToValue returns a card's value from the string representation provided
 func StringToValue(valueStr string) int {
 	switch valueStr {
-	case "A":
+	case "A", "a":
 		return 14
-	case "K":
+	case "K", "k":
 		return 13
-	case "Q":
+	case "Q", "q":
 		return 12
-	case "J":
+	case "J", "j":
 		return 11
+	case "T", "t":
+		return 10
 	}
 
 	value, err := strconv.Atoi(valueStr)
@@ -76,13 +80,13 @@ func StringToValue(valueStr string) int {
 	}
 
 	if value < 0 || value > 14 {
-		panic(fmt.Errorf("Invalid value string %s", valueStr))
+		panic(fmt.Errorf("invalid value string %s", valueStr))
 	}
 
 	return value
 }
 
-// SuitToString returns the string representation of a card's suit
+// SuitToString returns the fancy string representation of a card's suit
 func SuitToString(suit int) string {
 	switch suit {
 	case 1:
@@ -94,25 +98,40 @@ func SuitToString(suit int) string {
 	case 4:
 		return "♠️"
 	}
-	panic(fmt.Errorf("Invalid suit %d", suit))
+	panic(fmt.Errorf("invalid suit %d", suit))
 }
 
-// StringToSuit returns a card's suit from the string representation provided
+// StringToSuit returns a card's suit from the basic or fancy string representation provided
 func StringToSuit(suitStr string) int {
 	switch suitStr {
-	case "♥️":
+	case "♥️", "h":
 		return 1
-	case "♦️":
+	case "♦️", "d":
 		return 2
-	case "♣️":
+	case "♣️", "c":
 		return 3
-	case "♠️":
+	case "♠️", "s":
 		return 4
 	}
-	panic(fmt.Errorf("Invalid suit string %s", suitStr))
+	panic(fmt.Errorf("invalid suit string %s", suitStr))
+}
+
+// SuitToStringBasic returns the basic string representation of a card's suit
+func SuitToStringBasic(suit int) string {
+	switch suit {
+	case 1:
+		return "h"
+	case 2:
+		return "d"
+	case 3:
+		return "c"
+	case 4:
+		return "s"
+	}
+	panic(fmt.Errorf("invalid suit %d", suit))
 }
 
 // Print returns the string representation of the card
-func (c *Card) Print() string {
+func (c *Card) String() string {
 	return ValueToString(c.value) + SuitToString(c.suit)
 }
