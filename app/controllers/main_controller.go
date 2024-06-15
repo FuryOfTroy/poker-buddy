@@ -24,7 +24,7 @@ func EvaluateCards(c *fiber.Ctx) error {
 	}
 	cards := make([]*objects.Card, 0)
 	for i := 0; i < len(cardNames); i += 2 {
-		cards = append(cards, deck.TakeName(cardNames[i:2]))
+		cards = append(cards, deck.TakeName(cardNames[i:i+2]))
 	}
 	hand := funcs.EvaluateHand(cards)
 	return c.Status(fiber.StatusOK).JSON(serialization.HandToSer(hand))
@@ -40,7 +40,7 @@ func CalculateOdds(c *fiber.Ctx) error {
 	}
 	cards := make([]*objects.Card, 0)
 	for i := 0; i < len(cardNames); i += 2 {
-		cards = append(cards, deck.TakeName(cardNames[i:2]))
+		cards = append(cards, deck.TakeName(cardNames[i:i+2]))
 	}
 	hand := funcs.EvaluateHand(cards)
 	possibleHandsByRank := funcs.CalculateHandOdds(hand, cards, deck)
